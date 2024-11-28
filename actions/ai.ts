@@ -20,14 +20,12 @@ const generationConfig = {
   responseMimeType: "text/plain",
 };
 
-export async function runAi() {
+export async function runAi(text: string) {
   const chatSession = model.startChat({
     generationConfig,
     history: [],
   });
 
-  const result = await chatSession.sendMessage(
-    "Write the history of object oriented programming."
-  );
+  const result = await chatSession.sendMessage(text);
   return result.response.text();
 }
