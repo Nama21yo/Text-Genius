@@ -8,11 +8,14 @@ import {
   useUser,
 } from "@clerk/nextjs";
 import Link from "next/link";
+import { ModeToggle } from "./mode-toggle";
+import { Toaster } from "react-hot-toast";
 
 export default function TopNav() {
   const { isSignedIn, user } = useUser();
   return (
     <nav className="flex justify-between items-center p-4 shadow-md bg-white">
+      <Toaster />
       {/* Brand/Logo Section */}
       <Link
         href="/"
@@ -57,6 +60,10 @@ export default function TopNav() {
             aria-label="User Profile"
           />
         </SignedIn>
+
+        <div className="ml-2">
+          <ModeToggle />
+        </div>
       </div>
     </nav>
   );

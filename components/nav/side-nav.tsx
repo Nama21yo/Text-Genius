@@ -41,22 +41,20 @@ const SideNav = () => {
 
   return (
     <div
-      className={`h-screen p-5 shadow-sm border bg-white transition-all duration-300 ${
+      className={`h-screen p-5 shadow-sm border transition-all duration-300 ${
         isCollapsed ? "w-20" : "w-64"
-      }`}
+      } bg-background text-foreground`}
     >
       {/* Sidebar Header */}
       <div className="flex justify-between items-center mb-6">
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-2 rounded-md hover:bg-gray-200 transition"
+          className="p-2 rounded-md hover:bg-accent transition"
           aria-label="Toggle Sidebar"
         >
           {isCollapsed ? <Menu size={28} /> : <ChevronLeft size={28} />}
         </button>
-        {!isCollapsed && (
-          <h1 className="text-xl font-bold text-gray-800">TextGenAI</h1>
-        )}
+        {!isCollapsed && <h1 className="text-xl font-bold">TextGenAI</h1>}
       </div>
 
       {/* Menu Items */}
@@ -68,8 +66,8 @@ const SideNav = () => {
               key={index}
               className={`${
                 isActive
-                  ? "bg-primary text-white"
-                  : "hover:bg-primary hover:text-white text-gray-800"
+                  ? "bg-primary text-primary-foreground"
+                  : "hover:bg-accent hover:text-accent-foreground"
               } flex items-center p-2 rounded-lg transition`}
             >
               <Link
@@ -79,19 +77,16 @@ const SideNav = () => {
               >
                 <item.icon
                   size={isCollapsed ? 28 : 20} // Larger icons when collapsed
-                  className={`${isActive ? "text-white" : "text-gray-600"} ${
-                    isCollapsed ? "mx-auto" : ""
-                  }`}
+                  className={`${
+                    isActive
+                      ? "text-primary-foreground"
+                      : "text-muted-foreground"
+                  } ${isCollapsed ? "mx-auto" : ""}`}
                 />
                 {!isCollapsed && (
                   <span className="ml-3 hidden md:inline">{item.name}</span>
                 )}
               </Link>
-              {isCollapsed && (
-                <div className="absolute left-20 bg-gray-900 text-white text-sm px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition">
-                  {item.name}
-                </div>
-              )}
             </div>
           );
         })}
