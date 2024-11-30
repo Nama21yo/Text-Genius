@@ -83,3 +83,40 @@ export async function getQueries(
     };
   }
 }
+
+// this calculates usage count for each month
+export async function usageCount(email: string) {
+  await dbConnect();
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1; // JavaScript months are 0-indexed
+  const result = await Query.aggregate([
+    {
+      $match: {
+        email: email,
+        $expr: {
+          $and: [
+            { $eq: [{ $year: "$createdAt" }, currentYear] },
+            { $eq: [{ $month: "$createdAt" }, currentMonth] },
+          ],
+        },
+      },
+    },
+    {
+      $project: {
+        wordCount: {
+          $size: {
+            $split: [{ $trim: { input: "$content" } }, " "],
+          },
+        },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalWords: { $sum: "$wordCount" },
+      },
+    },
+  ]);
+  return result.length > 0 ? result[0].totalWords : 0;
+}

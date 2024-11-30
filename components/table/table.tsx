@@ -29,17 +29,11 @@ const QueryTable: React.FC<Props> = ({ data = [] }) => {
       <table className="min-w-full bg-white dark:bg-gray-800 text-sm">
         <thead className="bg-gray-100 dark:bg-gray-700">
           <tr>
-            <th className="py-2 px-4 border-b text-left font-semibold">
-              TEMPLATE
-            </th>
-            <th className="py-2 px-4 border-b text-left font-semibold">
-              QUERY
-            </th>
-            <th className="py-2 px-4 border-b text-left font-semibold">DATE</th>
-            <th className="py-2 px-4 border-b text-left font-semibold">
-              WORDS
-            </th>
-            <th className="py-2 px-4 border-b text-left font-semibold">COPY</th>
+            <th className="py-2 px-4 text-left font-semibold">TEMPLATE</th>
+            <th className="py-2 px-4 text-left font-semibold">QUERY</th>
+            <th className="py-2 px-4 text-left font-semibold">DATE</th>
+            <th className="py-2 px-4 text-left font-semibold">WORDS</th>
+            <th className="py-2 px-4 text-left font-semibold">COPY</th>
           </tr>
         </thead>
         <tbody>

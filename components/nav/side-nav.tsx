@@ -6,15 +6,13 @@ import {
   FileClock,
   WalletCards,
   Settings,
-  Menu,
-  ChevronLeft,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import Usage from "./usage";
 
 const SideNav = () => {
   const pathname = usePathname();
-  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const menu = [
     {
@@ -40,57 +38,38 @@ const SideNav = () => {
   ];
 
   return (
-    <div
-      className={`h-screen p-5 shadow-sm border transition-all duration-300 ${
-        isCollapsed ? "w-20" : "w-64"
-      } bg-background text-foreground`}
-    >
+    <div className="flex flex-col h-full bg-gray-50 shadow-lg border-r p-4">
       {/* Sidebar Header */}
-      <div className="flex justify-between items-center mb-6">
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-2 rounded-md hover:bg-accent transition"
-          aria-label="Toggle Sidebar"
-        >
-          {isCollapsed ? <Menu size={28} /> : <ChevronLeft size={28} />}
-        </button>
-        {!isCollapsed && <h1 className="text-xl font-bold">TextGenAI</h1>}
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-lg font-semibold text-gray-800">TextGenAI</h1>
       </div>
 
       {/* Menu Items */}
-      <nav className="space-y-2">
+      <ul className="flex-1 space-y-4">
         {menu.map((item, index) => {
           const isActive = pathname === item.path;
           return (
-            <div
-              key={index}
-              className={`${
-                isActive
-                  ? "bg-primary text-primary-foreground"
-                  : "hover:bg-accent hover:text-accent-foreground"
-              } flex items-center p-2 rounded-lg transition`}
-            >
+            <li key={index}>
               <Link
                 href={item.path}
-                className="flex items-center w-full"
-                aria-label={item.name}
+                className={`flex items-center p-3 rounded-lg transition-colors ${
+                  isActive
+                    ? "bg-primary text-white"
+                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                }`}
               >
-                <item.icon
-                  size={isCollapsed ? 28 : 20} // Larger icons when collapsed
-                  className={`${
-                    isActive
-                      ? "text-primary-foreground"
-                      : "text-muted-foreground"
-                  } ${isCollapsed ? "mx-auto" : ""}`}
-                />
-                {!isCollapsed && (
-                  <span className="ml-3 hidden md:inline">{item.name}</span>
-                )}
+                <item.icon className="w-6 h-6" />
+                <span className="ml-3">{item.name}</span>
               </Link>
-            </div>
+            </li>
           );
         })}
-      </nav>
+      </ul>
+
+      {/* Usage Component */}
+      <div className="mt-6">
+        <Usage />
+      </div>
     </div>
   );
 };

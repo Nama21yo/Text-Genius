@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import { saveQuery } from "@/actions/ai";
 import { useUser } from "@clerk/nextjs";
 import { Template } from "@/utils/types";
+import { useUsage } from "@/context/usage";
 
 const Page = ({ params }: { params: { slug: string } }) => {
   // State management
@@ -22,6 +23,8 @@ const Page = ({ params }: { params: { slug: string } }) => {
   const [content, setContent] = React.useState("");
   const [loading, setLoading] = React.useState(false);
 
+  // count the words
+  const { fetchUsage } = useUsage();
   //taking the email fromclerk authentication
   const { user } = useUser();
   const email = user?.primaryEmailAddress?.emailAddress || ""; //from clerk authentication
@@ -61,6 +64,7 @@ const Page = ({ params }: { params: { slug: string } }) => {
       setContent(data);
       // save to db (userEmail, query, content, templateSlug)
       await saveQuery(templateData, email, query, data);
+      fetchUsage(); //update count words
     } catch (err) {
       setContent("Failed to generate content. Try again.");
     } finally {
