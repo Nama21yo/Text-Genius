@@ -60,7 +60,7 @@ const SideNav = () => {
       {/* Menu Items */}
       <nav className="space-y-2">
         {menu.map((item, index) => {
-          const isActive = pathname.startsWith(item.path);
+          const isActive = pathname === item.path;
           return (
             <div
               key={index}
