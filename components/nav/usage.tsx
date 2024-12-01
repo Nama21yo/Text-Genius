@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export default function Usage() {
-  const { count } = useUsage();
-  const credits = 10000;
-  const percentage = (count / credits) * 100;
+  const { count, subscribed } = useUsage();
+  const credits = Number(process.env.NEXT_PUBLIC_FREE_TIER_USAGE) || 0;
+  const percentage = subscribed ? 100 : Math.min((count / credits) * 100, 100);
 
   return (
     <div className="m-4 p-4 bg-white border rounded-lg shadow-sm">
@@ -27,8 +27,14 @@ export default function Usage() {
 
       {/* Usage Stats */}
       <div className="flex justify-between items-center mt-3 text-sm text-gray-600">
-        <span>{count} credits used</span>
-        <span>{credits} total credits</span>
+        {subscribed ? (
+          <span>Unlimited Credits</span>
+        ) : (
+          <div>
+            <span>{count} credits used</span>
+            <span>{credits} total credits</span>
+          </div>
+        )}
       </div>
 
       {/* Upgrade Button */}

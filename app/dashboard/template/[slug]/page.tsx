@@ -24,7 +24,7 @@ const Page = ({ params }: { params: Promise<{ slug: string }> }) => {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { fetchUsage } = useUsage();
+  const { fetchUsage, subscribed, count } = useUsage();
   const { user } = useUser();
   const email = user?.primaryEmailAddress?.emailAddress || "";
 
@@ -145,13 +145,19 @@ const Page = ({ params }: { params: Promise<{ slug: string }> }) => {
             <button
               type="submit"
               className="w-full py-3 bg-blue-600 text-white rounded-md disabled:opacity-50 flex justify-center items-center shadow-md hover:bg-blue-700"
-              disabled={loading}
+              disabled={
+                loading ||
+                (!subscribed &&
+                  count >= Number(process.env.NEXT_PUBLIC_FREE_TIER_USAGE))
+              }
             >
-              {loading ? (
+              {loading && (
                 <Loader2Icon className="animate-spin text-white mr-2" />
-              ) : (
-                "Generate Content"
               )}
+              {subscribed ||
+              count < Number(process.env.NEXT_PUBLIC_FREE_TIER_USAGE)
+                ? "Generate Content"
+                : "Subscribe to generate content"}
             </button>
           </form>
         </div>
