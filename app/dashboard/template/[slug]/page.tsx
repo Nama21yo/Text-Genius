@@ -1,11 +1,12 @@
 "use client";
+
 import Link from "next/link";
 import { ArrowLeft, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { runAi } from "@/actions/ai";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import template from "@/utils/template"; // Ensure correct path
+import template from "@/utils/template";
 import { Loader2Icon } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect } from "react";
@@ -17,9 +18,12 @@ import { useUser } from "@clerk/nextjs";
 import { Template } from "@/utils/types";
 import { useUsage } from "@/context/usage";
 
-export default async function Page({ params }: { params: { slug: string } }) {
-  // Await params if necessary
-  const slug = params.slug;
+type Params = {
+  slug: string;
+};
+
+const Page = async ({ params }: { params: Promise<Params> }) => {
+  const { slug } = await params;
 
   const [query, setQuery] = React.useState("");
   const [content, setContent] = React.useState("");
@@ -27,8 +31,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
   const { fetchUsage } = useUsage();
   const { user } = useUser();
-  const email = user?.primaryEmailAddress?.emailAddress || ""; // Clerk authentication
-
+  const email = user?.primaryEmailAddress?.emailAddress || "";
   const editorRef = React.useRef<any>(null);
 
   useEffect(() => {
@@ -64,32 +67,19 @@ export default async function Page({ params }: { params: { slug: string } }) {
   };
 
   const handleCopy = async () => {
-    const content = editorRef.current.getInstance().getMarkdown();
+    const editorInstance = editorRef.current.getInstance();
+    const content = editorInstance.getMarkdown();
+
     try {
       await navigator.clipboard.writeText(content);
       toast.success("Content copied successfully.");
     } catch (err) {
-      toast.error("Failed to copy content. Please try again.");
+      toast.error("Failed to copy content.");
     }
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <Link
-          href="/dashboard"
-          className="flex items-center text-lg text-blue-600 hover:text-blue-800"
-        >
-          <ArrowLeft className="mr-2" /> <span>Back</span>
-        </Link>
-        <Button
-          onClick={handleCopy}
-          className="flex items-center bg-blue-500 text-white hover:bg-blue-600 rounded-md px-4 py-2 shadow-md"
-        >
-          <Copy className="mr-2" /> <span>Copy</span>
-        </Button>
-      </div>
-
       {/* Template Details */}
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
         <div className="col-span-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 flex flex-col gap-4">
@@ -107,6 +97,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
             <p className="text-gray-500 text-center">{templateData.desc}</p>
           </div>
 
+          {/* Form Section */}
           <form className="mt-6" onSubmit={handleSubmit}>
             {templateData.form.map((item) => (
               <div key={item.name} className="flex flex-col gap-3 mb-6">
@@ -134,7 +125,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
               disabled={loading}
             >
               {loading ? (
-                <Loader2Icon className="animate-spin text-white mr-2" />
+                <Loader2Icon className="animate-spin" />
               ) : (
                 "Generate Content"
               )}
@@ -143,7 +134,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
         </div>
 
         {/* Editor Section */}
-        <div className="col-span-1 sm:col-span-1 md:col-span-2 lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+        <div className="col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
           <Editor
             ref={editorRef}
             initialValue="Generated content will appear here"
@@ -152,11 +143,13 @@ export default async function Page({ params }: { params: { slug: string } }) {
             initialEditType="wysiwyg"
             useCommandShortcut={true}
             onChange={() =>
-              setContent(editorRef.current.getInstance().getMarkdown() || "")
+              setContent(editorRef.current?.getInstance()?.getMarkdown() || "")
             }
           />
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default Page;
