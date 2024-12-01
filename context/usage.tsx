@@ -28,7 +28,7 @@ export const UsageProvider = ({
   }, [email]);
 
   useEffect(() => {
-    if (count > 100) setOpenModal(true);
+    if (count > 10000) setOpenModal(true);
   }, [count]);
   const fetchUsage = async () => {
     const response = await usageCount(email);
