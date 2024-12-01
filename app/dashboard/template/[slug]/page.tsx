@@ -1,4 +1,3 @@
-"use client";
 import Link from "next/link";
 import { ArrowLeft, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,34 +16,28 @@ import { useUser } from "@clerk/nextjs";
 import { Template } from "@/utils/types";
 import { useUsage } from "@/context/usage";
 
-const Page = ({ params }: { params: { slug: string } }) => {
-  // State management
+export default async function Page({ params }: { params: { slug: string } }) {
+  // Await params if necessary
+  const slug = params.slug;
+
   const [query, setQuery] = React.useState("");
   const [content, setContent] = React.useState("");
   const [loading, setLoading] = React.useState(false);
 
-  // count the words
   const { fetchUsage } = useUsage();
-  //taking the email fromclerk authentication
   const { user } = useUser();
-  const email = user?.primaryEmailAddress?.emailAddress || ""; //from clerk authentication
+  const email = user?.primaryEmailAddress?.emailAddress || ""; // Clerk authentication
 
-  // Ref for editor instance
   const editorRef = React.useRef<any>(null);
 
-  // Update the editor content whenever `content` changes
   useEffect(() => {
     if (content && editorRef.current) {
       editorRef.current.getInstance().setMarkdown(content);
     }
   }, [content]);
 
-  // Find template data
-  const templateData = template.find(
-    (item) => item.slug === params.slug
-  ) as Template;
+  const templateData = template.find((item) => item.slug === slug) as Template;
 
-  // If template not found, show a message
   if (!templateData) {
     return (
       <div className="text-center py-10">
@@ -54,17 +47,14 @@ const Page = ({ params }: { params: { slug: string } }) => {
     );
   }
 
-  // Form submit handler
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    // console.log("submitted => ", t.aiPrompt, query);
     try {
       const data = await runAi(templateData.aiPrompt + query);
       setContent(data);
-      // save to db (userEmail, query, content, templateSlug)
       await saveQuery(templateData, email, query, data);
-      fetchUsage(); //update count words
+      fetchUsage();
     } catch (err) {
       setContent("Failed to generate content. Try again.");
     } finally {
@@ -73,14 +63,11 @@ const Page = ({ params }: { params: { slug: string } }) => {
   };
 
   const handleCopy = async () => {
-    const editorInstance = editorRef.current.getInstance();
-    const content = editorInstance.getMarkdown();
-
+    const content = editorRef.current.getInstance().getMarkdown();
     try {
       await navigator.clipboard.writeText(content);
       toast.success("Content copied successfully.");
     } catch (err) {
-      console.error("Error copying content:", err);
       toast.error("Failed to copy content. Please try again.");
     }
   };
@@ -102,8 +89,8 @@ const Page = ({ params }: { params: { slug: string } }) => {
         </Button>
       </div>
 
+      {/* Template Details */}
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
-        {/* Template Details */}
         <div className="col-span-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 flex flex-col gap-4">
           <div className="flex flex-col items-center">
             <Image
@@ -119,7 +106,6 @@ const Page = ({ params }: { params: { slug: string } }) => {
             <p className="text-gray-500 text-center">{templateData.desc}</p>
           </div>
 
-          {/* Form Section */}
           <form className="mt-6" onSubmit={handleSubmit}>
             {templateData.form.map((item) => (
               <div key={item.name} className="flex flex-col gap-3 mb-6">
@@ -165,13 +151,11 @@ const Page = ({ params }: { params: { slug: string } }) => {
             initialEditType="wysiwyg"
             useCommandShortcut={true}
             onChange={() =>
-              setContent(editorRef.current?.getInstance()?.getMarkdown() || "")
+              setContent(editorRef.current.getInstance().getMarkdown() || "")
             }
           />
         </div>
       </div>
     </div>
   );
-};
-
-export default Page;
+}
