@@ -10,6 +10,7 @@ import {
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Usage from "./usage";
+import SignUpModal from "../modal/sign-up-modal";
 
 const SideNav = () => {
   const pathname = usePathname();
@@ -69,6 +70,7 @@ const SideNav = () => {
       {/* Usage Component */}
       <div className="mt-6">
         <Usage />
+        <SignUpModal />
       </div>
     </div>
   );

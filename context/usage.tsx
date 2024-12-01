@@ -7,6 +7,8 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 interface UsageContextType {
   count: number;
   fetchUsage: () => void;
+  openModal: boolean;
+  setOpenModal: (open: boolean) => void;
 }
 
 const UsageContext = createContext<UsageContextType | null>(null);
@@ -26,7 +28,7 @@ export const UsageProvider = ({
   }, [email]);
 
   useEffect(() => {
-    if (count > 10000) setOpenModal(true);
+    if (count > 100) setOpenModal(true);
   }, [count]);
   const fetchUsage = async () => {
     const response = await usageCount(email);
@@ -34,7 +36,9 @@ export const UsageProvider = ({
   };
   // console.log("usage count in context => ", count);
   return (
-    <UsageContext.Provider value={{ count, fetchUsage }}>
+    <UsageContext.Provider
+      value={{ count, fetchUsage, openModal, setOpenModal }}
+    >
       {children}
     </UsageContext.Provider>
   );

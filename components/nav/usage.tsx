@@ -3,6 +3,7 @@
 import React from "react";
 import { useUsage } from "@/context/usage";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Usage() {
   const { count } = useUsage();
@@ -31,9 +32,11 @@ export default function Usage() {
       </div>
 
       {/* Upgrade Button */}
-      <Button className="w-full mt-4 py-2" variant="secondary">
-        Upgrade Now
-      </Button>
+      <Link href="/membership">
+        <Button className="w-full mt-4 py-2" variant="secondary">
+          Upgrade Now
+        </Button>
+      </Link>
     </div>
   );
 }

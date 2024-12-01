@@ -20,9 +20,9 @@ const DashboardLayout = ({
       </div>
 
       {/* Main Layout */}
-      <div className="flex flex-1">
+      <div className="flex flex-1 h-screen">
         {/* Sidebar for Desktop */}
-        <div className="hidden md:block md:w-64 lg:w-1/4">
+        <div className="hidden h-screen md:block md:w-64 lg:w-1/4">
           <SideNav />
         </div>
 

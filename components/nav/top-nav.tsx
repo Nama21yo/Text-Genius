@@ -25,6 +25,9 @@ export default function TopNav() {
         Text<span className="text-gray-700">Genius</span>
       </Link>
 
+      <div className="text-center font-semibold">
+        <Link href="/membership">Join free or $4.99/month</Link>
+      </div>
       {/* Navigation Links & User Actions */}
       <div className="flex items-center space-x-4">
         {isSignedIn && (
