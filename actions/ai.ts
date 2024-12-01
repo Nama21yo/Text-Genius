@@ -22,6 +22,19 @@ const generationConfig = {
   responseMimeType: "text/plain",
 };
 
+/**
+ * This function is responsible for generating text using the Google Generative AI model.
+ *
+ * @param text - The input text that will be used as a prompt for the AI model.
+ *
+ * @returns A Promise that resolves to the generated text as a string.
+ *
+ * @example
+ * ```typescript
+ * const generatedText = await runAi("What is the meaning of life?");
+ * console.log(generatedText);
+ * ```
+ */
 export async function runAi(text: string) {
   const chatSession = model.startChat({
     generationConfig,
@@ -57,6 +70,17 @@ export async function saveQuery(
   }
 }
 
+/**
+ * Retrieves paginated queries for a specific user.
+ *
+ * @param email - The email address of the user whose queries are to be retrieved.
+ * @param page - The page number of the results to retrieve (1-indexed).
+ * @param pageSize - The number of queries to return per page.
+ * @returns A Promise that resolves to an object containing:
+ *   - queries: An array of Query objects for the specified page.
+ *   - totalPages: The total number of pages available.
+ *   If an error occurs, it returns an object with `ok: false`.
+ */
 export async function getQueries(
   email: string,
   page: number,
@@ -85,6 +109,17 @@ export async function getQueries(
 }
 
 // this calculates usage count for each month
+/**
+ * Calculates the total word count of queries made by a user in the current month.
+ *
+ * This function aggregates the word count from all queries made by the specified user
+ * within the current month and year. It uses MongoDB's aggregation pipeline to perform
+ * the calculation efficiently.
+ *
+ * @param email - The email address of the user whose usage is being calculated.
+ * @returns A Promise that resolves to the total word count for the current month.
+ *          Returns 0 if no queries are found for the current month.
+ */
 export async function usageCount(email: string) {
   await dbConnect();
   const currentDate = new Date();

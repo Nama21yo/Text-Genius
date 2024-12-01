@@ -62,12 +62,12 @@ export default function Home() {
             <PromoCard
               title="AI-Powered Writing"
               description="Leverage cutting-edge AI to craft error-free, engaging, and meaningful content in seconds."
-              link="/features"
+              link="/dashboard"
             />
             <PromoCard
               title="Customizable Templates"
               description="Access a growing library of templates tailored for blogs, emails, social media, and more."
-              link="/templates"
+              link="/dashboard"
             />
             <PromoCard
               title="Tone & Style Adjustments"

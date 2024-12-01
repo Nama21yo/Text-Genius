@@ -8,6 +8,16 @@ interface CheckoutSessionResponse {
   url?: string;
   error?: string;
 }
+/**
+ * Creates a Stripe Checkout session for user subscription.
+ *
+ * This function checks if the user already has an active subscription,
+ * and if not, creates a new Stripe Checkout session for subscription purchase.
+ *
+ * @returns {Promise<CheckoutSessionResponse>} An object containing either the Checkout session URL or an error message.
+ * @property {string} [url] - The URL of the created Checkout session, if successful.
+ * @property {string} [error] - An error message if the session creation fails or if the user already has an active subscription.
+ */
 export async function createCheckoutSession(): Promise<CheckoutSessionResponse> {
   const user = await currentUser();
   const customerEmail = user?.emailAddresses[0]?.emailAddress;
